@@ -1,0 +1,18 @@
+# Extract certificate and create trust store
+--------------------------------------------
+- Extract provider certificate using openssl
+	"openssl s_client -connect api.connectsaudi.com:443 -showcerts > cert.pem"
+	
+- Create truststore and add the cetificate
+	"keytool -importcert -alias connectsaudi -file cert.pem -keystore truststore.jks -storepass tree@123"
+	
+
+# Configure trust store in springBoot app
+------------------------------------------
+- for server-side SSL (HTTPS on your app)
+	server.ssl.trust-store=classpath:truststore.jks
+	server.ssl.trust-store-password=changeit
+	
+- For outgoing calls (RestTemplate/WebClient), better use JVM args
+	-Djavax.net.ssl.trustStore=D:\Projects\tree-notification-service\src\main\resources\truststore.jks
+	-Djavax.net.ssl.trustStorePassword=tree@123
